@@ -1,0 +1,12 @@
+version = 0.1
+[default]
+[default.deploy]
+[default.deploy.parameters]
+stack_name = "selenium-bot"
+s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-24lo4338d4np"
+s3_prefix = "selenium-bot"
+region = "us-east-1"
+confirm_changeset = true
+capabilities = "CAPABILITY_IAM"
+disable_rollback = true
+image_repositories = ["SeleniumBotFunction=562233691606.dkr.ecr.us-east-1.amazonaws.com/seleniumbot976e2f6c/seleniumbotfunction19d43fc4repo"]
