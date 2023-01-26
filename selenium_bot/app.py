@@ -44,19 +44,13 @@ def lambda_handler(event, context):
         result = "get the phone number and screenshot"
         print(result)
 
-        phone = WebDriverWait(driver, 30).until(
-            EC.presence_of_element_located((By.XPATH, "//*[@data-attrid='kc:/collection/knowledge_panels/has_phone:phone']//*[@aria-label]"))
-        )
+        resultFromChrome = driver.find_element(By.XPATH, '//*[@id="result-stats"]').text
 
-        result = "print search result"
-        print(result)
-        result = '(!) Result found: ' + phone.text
-
-        result = "get a screenshot"
-        print(result)
-        driver.save_screenshot('screenshot.png')
+        print(resultFromChrome)
 
         result = "exit driver"
+        print(result)
+
         driver.quit()
 
     except Exception as e:
@@ -72,6 +66,7 @@ def lambda_handler(event, context):
         "body": json.dumps(
             {
                 "message": "selenium run successfully",
+                "result": resultFromChrome
             }
         ),
     }
