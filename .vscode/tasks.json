@@ -1,0 +1,16 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "pipInstall",
+            "type": "shell",
+            "linux": {
+                "command": "/usr/bin/python3 -m pip install -r requirements.txt"
+            },
+            "problemMatcher": [],
+            "options": {
+                "cwd": "${workspaceFolder}/selenium_bot"
+            }
+        }
+    ]
+}
