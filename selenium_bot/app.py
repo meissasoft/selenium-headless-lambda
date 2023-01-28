@@ -16,11 +16,12 @@ def lambda_handler(event, context):
         print(result)
 
         chrome_options = Options()
-        chrome_options.add_argument("--headless")
-        chrome_options.add_argument("--disable-dev-shm-usage")
-        chrome_options.add_argument("--no-sandbox")
+        chrome_options.add_argument('--no-sandbox')
+        chrome_options.add_argument('--headless')
+        chrome_options.add_argument('--disable-dev-shm-usage')
 
-        driver = webdriver.Chrome(r'/opt/chrome/chromedriver', chrome_options=chrome_options)
+        driver = webdriver.Chrome(
+            '/opt/chrome/chromedriver', chrome_options=chrome_options)
 
         # driver.maximize_window()
 
@@ -44,7 +45,8 @@ def lambda_handler(event, context):
         result = "get the phone number and screenshot"
         print(result)
 
-        resultFromChrome = driver.find_element(By.XPATH, '//*[@id="result-stats"]').text
+        resultFromChrome = driver.find_element(
+            By.XPATH, '//*[@id="result-stats"]').text
 
         print(resultFromChrome)
 
@@ -58,7 +60,6 @@ def lambda_handler(event, context):
         print(result)
         result = '(!) Result not found: ' + result
         resultFromChrome = result
-
 
     print(result)
 
