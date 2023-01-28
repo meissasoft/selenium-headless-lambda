@@ -57,6 +57,7 @@ def lambda_handler(event, context):
         result = str(e)
         print(result)
         result = '(!) Result not found: ' + result
+        resultFromChrome = result
 
 
     print(result)
