@@ -1,5 +1,12 @@
-import os, shutil, uuid
+import os
+import shutil
+import json
+import logging
+import uuid
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.by import By
 from selenium import webdriver
+
 
 def setup():
     BIN_DIR = "/tmp/bin"
@@ -11,12 +18,13 @@ def setup():
     if not os.path.exists(LIB_DIR):
         print("Creating lib folder")
         os.makedirs(LIB_DIR)
-        
+
     for filename in ['chromedriver', 'headless-chromium', 'lib/libgconf-2.so.4', 'lib/libORBit-2.so.0']:
         oldfile = f'/opt/{filename}'
         newfile = f'{BIN_DIR}/{filename}'
         shutil.copy2(oldfile, newfile)
         os.chmod(newfile, 0o775)
+
 
 def init_web_driver():
     setup()
@@ -39,16 +47,19 @@ def init_web_driver():
     chrome_options.add_argument('--no-sandbox')
     chrome_options.add_argument('--disable-gpu')
     chrome_options.add_argument('--window-size=1280x1696')
-    chrome_options.add_argument('--user-data-dir={}'.format(_tmp_folder + '/user-data'))
+    chrome_options.add_argument(
+        '--user-data-dir={}'.format(_tmp_folder + '/user-data'))
     chrome_options.add_argument('--hide-scrollbars')
     chrome_options.add_argument('--enable-logging')
     chrome_options.add_argument('--log-level=0')
     chrome_options.add_argument('--v=99')
     chrome_options.add_argument('--single-process')
-    chrome_options.add_argument('--data-path={}'.format(_tmp_folder + '/data-path'))
+    chrome_options.add_argument(
+        '--data-path={}'.format(_tmp_folder + '/data-path'))
     chrome_options.add_argument('--ignore-certificate-errors')
     chrome_options.add_argument('--homedir={}'.format(_tmp_folder))
-    chrome_options.add_argument('--disk-cache-dir={}'.format(_tmp_folder + '/cache-dir'))
+    chrome_options.add_argument(
+        '--disk-cache-dir={}'.format(_tmp_folder + '/cache-dir'))
     chrome_options.add_argument(
         'user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36')
 
@@ -57,7 +68,38 @@ def init_web_driver():
     driver = webdriver.Chrome(chrome_options=chrome_options)
     return driver
 
+
 def lambda_handler(event, context):
-    driver = init_web_driver()
-    driver.get("http://www.python.org")
-    print(driver.title)
+    try:
+        result = "init driver"
+        driver = init_web_driver()
+
+        result = "find element in google"
+        searchbar = driver.find_element(By.NAME, "q")
+        print(result)
+
+        searchbar.clear()
+        searchbar.send_keys('Starbucks 1912 pike place')
+        searchbar.send_keys(Keys.ENTER)
+
+        result = "get the phone number and screenshot"
+        print(result)
+
+        result = driver.find_element(
+            By.XPATH, '//*[@id="result-stats"]').text
+
+        driver.quit()
+
+    except Exception as e:
+        result = str(e)
+        result = '(!) Exception: ' + result
+
+    return {
+        "statusCode": 200,
+        "body": json.dumps(
+            {
+                "message": "selenium ran successfully",
+                "result": result
+            }
+        ),
+    }

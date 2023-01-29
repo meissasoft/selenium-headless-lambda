@@ -4,11 +4,11 @@ function build {
     remove-item .\layers\python-dependencies -recurse
     mkdir ./layers/python-dependencies/python/lib/python3.7/site-packages
     pip install -r requirements.txt -t ./layers/python-dependencies/python/lib/python3.7/site-packages
-    sam build -u
+    sam build
 }
 
 function deploy{
-    sam deploy
+    sam deploy --guided
     remove-item .\layers\python-dependencies -recurse
 }
 

@@ -12,19 +12,12 @@ Globals:
 
 Resources:
 
-  DeploymentPermission:
-    Type: "AWS::Lambda::LayerVersionPermission"
-    Properties:
-      Action: lambda:GetLayerVersion
-      LayerVersionArn: !Ref ChromiumLayer
-      Principal: '*'
-
-  DeploymentPermission:
-    Type: "AWS::Lambda::LayerVersionPermission"
-    Properties:
-      Action: lambda:GetLayerVersion
-      LayerVersionArn: !Ref PythonDepLayer
-      Principal: '*'
+  # DeploymentPermission:
+  #   Type: "AWS::Lambda::LayerVersionPermission"
+  #   Properties:
+  #     Action: lambda:GetLayerVersion
+  #     LayerVersionArn: !Ref ChromiumLayer
+  #     Principal: '*'
 
   ChromiumLayer:
     Type: AWS::Serverless::LayerVersion
@@ -33,22 +26,7 @@ Resources:
       Description: Headless Chromium and Selenium WebDriver
       ContentUri: ./layers/selenium-binaries
       CompatibleRuntimes:
-        - nodejs8.10
         - python3.8
-        - python2.7
-        - go1.x
-        - java8
-      LicenseInfo: 'MIT'
-      RetentionPolicy: Retain
-  
-  PythonDepLayer:
-    Type: AWS::Serverless::LayerVersion
-    Properties:
-      LayerName: selenium-layer
-      Description: Selenium, Requests, Chromedriver-binary
-      ContentUri: ./layers/python-dependencies
-      CompatibleRuntimes:
-        - python3.7
       LicenseInfo: 'MIT'
       RetentionPolicy: Retain
 
@@ -60,9 +38,17 @@ Resources:
       Runtime: python3.7
       MemorySize: 764
       Timeout: 300
+      # PackageType: Image
+      # Architectures:
+      #   - x86_64
+      # Events:
+      #   SeleniumBot:
+      #     Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+      #     Properties:
+      #       Path: /selenium_bot
+      #       Method: get
       Layers:
         - !Ref ChromiumLayer
-        - !Ref PythonDepLayer
       Environment:
         Variables:
           CLEAR_TMP: "true"
