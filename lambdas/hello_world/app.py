@@ -71,22 +71,26 @@ def init_web_driver():
 
 def lambda_handler(event, context):
     try:
-        result = "init driver"
         driver = init_web_driver()
+        driver.get("http://www.python.org")
+        result = driver.title
 
-        result = "find element in google"
-        searchbar = driver.find_element(By.NAME, "q")
-        print(result)
+        # result = "init driver"
+        # driver = init_web_driver()
 
-        searchbar.clear()
-        searchbar.send_keys('Starbucks 1912 pike place')
-        searchbar.send_keys(Keys.ENTER)
+        # result = "find element in google"
+        # searchbar = driver.find_element(By.NAME, "q")
+        # print(result)
 
-        result = "get the phone number and screenshot"
-        print(result)
+        # searchbar.clear()
+        # searchbar.send_keys('Starbucks 1912 pike place')
+        # searchbar.send_keys(Keys.ENTER)
 
-        result = driver.find_element(
-            By.XPATH, '//*[@id="result-stats"]').text
+        # result = "get the phone number and screenshot"
+        # print(result)
+
+        # result = driver.find_element(
+        #     By.XPATH, '//*[@id="result-stats"]').text
 
         driver.quit()
 
