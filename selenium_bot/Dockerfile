@@ -1,27 +1,17 @@
-FROM public.ecr.aws/lambda/python:3.8
+FROM public.ecr.aws/lambda/python@sha256:e1948dc355b1d65f11ffe48d15c46b4e4aad0ea77851b63914f67bcaa678567f as build
+RUN yum install -y unzip && \
+    curl -Lo "/tmp/chromedriver.zip" "https://chromedriver.storage.googleapis.com/109.0.5414.74/chromedriver_linux64.zip" && \
+    curl -Lo "/tmp/chrome-linux.zip" "https://www.googleapis.com/download/storage/v1/b/chromium-browser-snapshots/o/Linux_x64%2F1070081%2Fchrome-linux.zip?alt=media" && \
+    unzip /tmp/chromedriver.zip -d /opt/ && \
+    unzip /tmp/chrome-linux.zip -d /opt/
 
-RUN yum install unzip -y
-RUN python3.8 -m pip install --upgrade pip
-
-ENV PYTHONUNBUFFERED 1
-
-RUN cat /etc/os-release
-
-# install headless chrome
-    # RUN curl -O  https://dl.google.com/linux/direct/google-chrome-stable_current_x86_64.rpm
-    COPY google-chrome-stable_current_x86_64.rpm ./
-    RUN yum install ./google-chrome-stable_current_x86_64.rpm -y
-
-
-# download chromedriver
-    RUN mkdir /opt/chrome
-    # RUN curl -O https://chromedriver.storage.googleapis.com/109.0.5414.74/chromedriver_linux64.zip
-    COPY chromedriver_linux64.zip ./
-    RUN unzip chromedriver_linux64.zip -d /opt/chrome
-
-COPY app.py requirements.txt ./
-
-RUN python3.8 -m pip install -r requirements.txt -t .
-
-# Command can be overwritten by providing a different command in the template directly.
-CMD ["app.lambda_handler"]
+FROM public.ecr.aws/lambda/python@sha256:e1948dc355b1d65f11ffe48d15c46b4e4aad0ea77851b63914f67bcaa678567f
+RUN yum install atk cups-libs gtk3 libXcomposite alsa-lib \
+    libXcursor libXdamage libXext libXi libXrandr libXScrnSaver \
+    libXtst pango at-spi2-atk libXt xorg-x11-server-Xvfb \
+    xorg-x11-xauth dbus-glib dbus-glib-devel -y
+RUN pip install selenium
+COPY --from=build /opt/chrome-linux /opt/chrome
+COPY --from=build /opt/chromedriver /opt/
+COPY app.py ./
+CMD [ "app.handler" ]
