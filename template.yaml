@@ -1,4 +1,4 @@
-AWSTemplateFormatVersion: '2010-09-09'
+AWSTemplateFormatVersion: "2010-09-09"
 Transform: AWS::Serverless-2016-10-31
 Description: >
   lambda-selenium
@@ -11,7 +11,6 @@ Globals:
     Timeout: 3
 
 Resources:
-
   # DeploymentPermission:
   #   Type: "AWS::Lambda::LayerVersionPermission"
   #   Properties:
@@ -27,7 +26,7 @@ Resources:
       ContentUri: ./layers/selenium-binaries
       CompatibleRuntimes:
         - python3.8
-      LicenseInfo: 'MIT'
+      LicenseInfo: "MIT"
       RetentionPolicy: Retain
 
   LambdaSelenium:
@@ -35,7 +34,7 @@ Resources:
     Properties:
       CodeUri: lambdas/hello_world/
       Handler: app.lambda_handler
-      Runtime: python3.7
+      Runtime: python3.8
       MemorySize: 764
       Timeout: 300
       # PackageType: Image

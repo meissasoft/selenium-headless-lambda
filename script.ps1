@@ -1,18 +1,18 @@
-$cmd=$args[0]
+$cmd = $args[0]
 
 function build {
     remove-item .\layers\python-dependencies -recurse
-    mkdir ./layers/python-dependencies/python/lib/python3.7/site-packages
-    pip install -r requirements.txt -t ./layers/python-dependencies/python/lib/python3.7/site-packages
+    mkdir ./layers/python-dependencies/python/lib/python3.8/site-packages
+    pip install -r requirements.txt -t ./layers/python-dependencies/python/lib/python3.8/site-packages
     sam build
 }
 
-function deploy{
+function deploy {
     sam deploy --guided
     remove-item .\layers\python-dependencies -recurse
 }
 
-function fetch{
+function fetch {
     Remove-Item .\layers\selenium-binaries\chromedriver
     Remove-Item .\layers\selenium-binaries\headless-chromium
     Invoke-WebRequest -Uri https://chromedriver.storage.googleapis.com/2.32/chromedriver_linux64.zip -UseBasicParsing -outfile .\chromedriver.zip
@@ -23,13 +23,16 @@ function fetch{
     Remove-Item .\headless-chromium.zip
 }
 
-if($cmd -eq "deploy"){
+if ($cmd -eq "deploy") {
     deploy
-} elseif($cmd -eq "build"){
+}
+elseif ($cmd -eq "build") {
     build
-}  elseif($cmd -eq "fetch"){
+}
+elseif ($cmd -eq "fetch") {
     fetch
-} elseif($cmd -eq "bd"){
+}
+elseif ($cmd -eq "bd") {
     build
     deploy
 }
