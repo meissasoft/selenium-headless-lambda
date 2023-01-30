@@ -1,32 +1,32 @@
+from selenium import webdriver
+from tempfile import mkdtemp
+from selenium.webdriver.common.by import By
+import json
+import logging
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
-
-def lambda_handler(event, context):
-
+def handler(event=None, context=None):
     try:
-        import json
-        import logging
-        from selenium import webdriver
-        from selenium.webdriver.chrome.options import Options
-        from selenium.webdriver.common.keys import Keys
-        from selenium.webdriver.common.by import By
-        from selenium.webdriver.support.ui import WebDriverWait
-        from selenium.webdriver.support import expected_conditions as EC
-
-        result = "initiate drivers"
-        print(result)
-
-        chrome_options = Options()
-        chrome_options.add_argument('--no-sandbox')
-        chrome_options.add_argument('--headless')
-        chrome_options.add_argument('--disable-dev-shm-usage')
-        chrome_options.add_argument('--disable-gpu')
-        chrome_options.add_argument('--disable-gpu-sandbox')
-        chrome_options.add_argument("--single-process")
-
-        driver = webdriver.Chrome(
-            '/opt/chrome/chromedriver', chrome_options=chrome_options)
-
-        # driver.maximize_window()
+        options = webdriver.ChromeOptions()
+        options.binary_location = '/opt/chrome/chrome'
+        options.add_argument('--headless')
+        options.add_argument('--no-sandbox')
+        options.add_argument("--disable-gpu")
+        options.add_argument("--window-size=1280x1696")
+        options.add_argument("--single-process")
+        options.add_argument("--disable-dev-shm-usage")
+        options.add_argument("--disable-dev-tools")
+        options.add_argument("--no-zygote")
+        options.add_argument(f"--user-data-dir={mkdtemp()}")
+        options.add_argument(f"--data-path={mkdtemp()}")
+        options.add_argument(f"--disk-cache-dir={mkdtemp()}")
+        options.add_argument("--remote-debugging-port=9222")
+        driver = webdriver.Chrome("/opt/chromedriver",
+                                options=options)
 
         driver.set_page_load_timeout(30)
 
